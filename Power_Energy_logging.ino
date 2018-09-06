@@ -51,9 +51,9 @@ void loop()
       //convert to voltage 
       v_buffer[buf_read_ctr] = 5*(v_buffer[buf_read_ctr]/1023);
       //measure current through resistor
-      i_buffer[buf_read_ctr] = (5 - v_buffer[buf_read_ctr])/resistor;
+      //i_buffer[buf_read_ctr] = (5 - v_buffer[buf_read_ctr])/resistor;
       //power = v*i
-      power[buf_read_ctr] = v_buffer[buf_read_ctr]*i_buffer[buf_read_ctr];
+      power[buf_read_ctr] = v_buffer[buf_read_ctr]*v_buffer[buf_read_ctr]/resistor;
       //energy
       energy = energy + power[buf_read_ctr]*time_step;
       Serial.print("$");
