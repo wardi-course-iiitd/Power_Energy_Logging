@@ -10,6 +10,7 @@
 #define resistor 330
 #define time_step 1/62.5
 volatile float v_buffer[64] = {0};
+volatile float i_buffer[64] = {0};
 volatile unsigned int buf_fill_ctr=0;
 volatile unsigned int buf_read_ctr=0;
 volatile byte flag = 0;
@@ -47,10 +48,12 @@ void loop()
       buf_read_ctr++;
       //ensure buffer counter doesn't cross 63
       buf_read_ctr&=63;
-      //convert to voltage
+      //convert to voltage 
       v_buffer[buf_read_ctr] = 5*(v_buffer[buf_read_ctr]/1023);
-      //power
-      power[buf_read_ctr] = v_buffer[buf_read_ctr]*v_buffer[buf_read_ctr]/resistor;
+      //measure current through resistor
+      i_buffer[buf_read_ctr] = (5 - v_buffer[buf_read_ctr])/resistor;
+      //power = v*i
+      power[buf_read_ctr] = v_buffer[buf_read_ctr]*i_buffer[buf_read_ctr];
       //energy
       energy = energy + power[buf_read_ctr]*time_step;
       Serial.print("$");
